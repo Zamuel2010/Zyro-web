@@ -58,13 +58,20 @@ export default function Home() {
               Your ultimate hub for advanced crypto intelligence, AI-driven trading alpha, and seamless portfolio management.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
               <Link 
                 to="/dashboard"
                 className="px-8 py-4 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl font-bold shadow-[0_0_30px_rgba(220,38,38,0.3)] transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
               >
                 Launch Dashboard
                 <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link 
+                to="/crypto-project"
+                className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-medium transition-colors w-full sm:w-auto justify-center flex items-center gap-2"
+              >
+                <Zap className="w-5 h-5 text-red-400" />
+                Crypto Project
               </Link>
               <Link 
                 to="/about"
@@ -161,9 +168,9 @@ export default function Home() {
           </div>
           
           <div className="mt-8 text-center">
-            <button className="text-red-400 hover:text-red-300 font-medium text-sm flex items-center gap-1 mx-auto transition-colors">
+            <Link to="/dashboard" className="text-red-400 hover:text-red-300 font-medium text-sm flex items-center gap-1 mx-auto transition-colors w-fit">
               View All News <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
         </motion.div>
       </main>

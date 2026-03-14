@@ -4,14 +4,33 @@ import { supabase } from './lib/supabase';
 import { User } from '@supabase/supabase-js';
 import Auth from './components/Auth';
 import Home from './pages/Home';
-import CryptoDashboard from './pages/CryptoDashboard';
-import { LogOut, Send, Twitter } from 'lucide-react';
+import Dashboard from './pages/Dashboard';
+import CryptoProject from './pages/CryptoProject';
+import { LogOut, Send, Twitter, ArrowLeft } from 'lucide-react';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Handle OAuth popup callback
+    if (window.opener && (window.location.hash.includes('access_token') || window.location.search.includes('code'))) {
+      window.opener.postMessage({ type: 'OAUTH_AUTH_SUCCESS' }, '*');
+      const timer = setTimeout(() => {
+        window.close();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'OAUTH_AUTH_SUCCESS') {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          setUser(session?.user ?? null);
+        });
+      }
+    };
+    window.addEventListener('message', handleMessage);
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
@@ -21,7 +40,10 @@ export default function App() {
       setUser(session?.user ?? null);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('message', handleMessage);
+    };
   }, []);
 
   const handleSignOut = async () => {
@@ -63,6 +85,7 @@ export default function App() {
                 <div className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
                   <Link to="/" className="hover:text-white transition-colors">Home</Link>
                   <Link to="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+                  <Link to="/crypto-project" className="hover:text-white transition-colors">Crypto Project</Link>
                   <Link to="/about" className="hover:text-white transition-colors">About</Link>
                 </div>
                 
@@ -87,9 +110,14 @@ export default function App() {
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<CryptoDashboard user={user} />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/crypto-project" element={<CryptoProject />} />
             <Route path="/about" element={
               <div className="max-w-4xl mx-auto px-4 py-20">
+                <Link to="/" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors font-medium">
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Home
+                </Link>
                 <div className="text-center mb-16">
                   <h1 className="text-4xl md:text-5xl font-bold mb-6">About Zyro Web</h1>
                   <p className="text-xl text-zinc-400">Next-generation crypto intelligence and portfolio management.</p>
@@ -98,7 +126,7 @@ export default function App() {
                 <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row gap-10 items-center">
                   <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-red-500/20 shrink-0 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
                     <img 
-                      src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400&h=400" 
+                      src="https://i.postimg.cc/Dw9g52tm/IMG-3529.jpg" 
                       alt="Founder" 
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
@@ -112,11 +140,14 @@ export default function App() {
                     <p className="text-zinc-400 mb-6 leading-relaxed">
                       Zyro Web was founded with a single mission: to build the most intuitive and powerful crypto intelligence interface on the web. As a passionate Front-End Developer with a deep love for sleek UI/UX and modern web technologies, our founder built Zyro to bridge the gap between complex blockchain data and everyday traders. Every pixel and interaction is crafted to give you a seamless, edge-driven trading experience.
                     </p>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
                       <a href="https://x.com/@zyroonchain" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-medium transition-colors flex items-center gap-2">
                         <Twitter className="w-4 h-4" />
                         Follow on X
                       </a>
+                      <Link to="/crypto-project" className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.2)]">
+                        View Crypto Project
+                      </Link>
                     </div>
                   </div>
                 </div>

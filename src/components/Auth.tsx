@@ -56,10 +56,17 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
     setError('');
     setLoading(true);
     try {
-      const { error: signInError } = await supabase.auth.signInWithOAuth({
+      const { data, error: signInError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+          skipBrowserRedirect: true,
+          redirectTo: window.location.origin
+        }
       });
       if (signInError) throw signInError;
+      if (data?.url) {
+        window.open(data.url, 'oauth_popup', 'width=500,height=600');
+      }
     } catch (err: any) {
       setError(err.message || 'An error occurred during authentication.');
     } finally {

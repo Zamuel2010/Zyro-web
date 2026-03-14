@@ -1,6 +1,7 @@
 import { User } from '@supabase/supabase-js';
-import { Activity, Zap, Target, Flame, Cpu, TrendingUp, BarChart2 } from 'lucide-react';
+import { Activity, Zap, Target, Flame, Cpu, TrendingUp, BarChart2, ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 
 export default function CryptoDashboard({ user }: { user: User | null }) {
   return (
@@ -12,6 +13,10 @@ export default function CryptoDashboard({ user }: { user: User | null }) {
       
       {/* Main Content (AI Trading Alpha Dashboard) */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        <Link to="/" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors font-medium">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </Link>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -28,11 +33,17 @@ export default function CryptoDashboard({ user }: { user: User | null }) {
             <p className="text-zinc-400">Here are your personalized AI-driven market signals and alpha.</p>
           </div>
           <div className="flex gap-3">
-            <button className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-medium transition-colors flex items-center gap-2">
+            <button 
+              onClick={() => alert('Market Overview coming soon!')}
+              className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
+            >
               <BarChart2 className="w-4 h-4" />
               Market Overview
             </button>
-            <button className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl text-sm font-bold shadow-[0_0_20px_rgba(220,38,38,0.3)] transition-all flex items-center gap-2">
+            <button 
+              onClick={() => alert('Auto-Trade feature is currently in beta. Stay tuned!')}
+              className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl text-sm font-bold shadow-[0_0_20px_rgba(220,38,38,0.3)] transition-all flex items-center gap-2"
+            >
               <Zap className="w-4 h-4" />
               Auto-Trade
             </button>
@@ -122,7 +133,12 @@ export default function CryptoDashboard({ user }: { user: User | null }) {
               <TrendingUp className="w-5 h-5 text-red-400" />
               Trending Alpha Signals
             </h3>
-            <button className="text-sm text-zinc-400 hover:text-white transition-colors">View All</button>
+            <button 
+              onClick={() => alert('Full signals list coming soon!')}
+              className="text-sm text-zinc-400 hover:text-white transition-colors"
+            >
+              View All
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
